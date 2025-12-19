@@ -148,7 +148,7 @@ public class BetterNewAiCarController : MonoBehaviour
         transform.rotation = Quaternion.Lerp(
             transform.rotation,
             Quaternion.LookRotation(aiCarManager.BezierPoints[currentWaypointIndex] - transform.position),
-            STEERING_LERP
+            STEERING_LERP * Time.fixedDeltaTime
         );
 
         foreach (CarController.Wheel wheel in frontWheels)
@@ -156,7 +156,7 @@ public class BetterNewAiCarController : MonoBehaviour
             wheel.wheelCollider.steerAngle = Mathf.Lerp(
                 wheel.wheelCollider.steerAngle, 
                 steerAngle * Mathf.Sign(Vector3.Cross(transform.forward, aiCarManager.BezierPoints[currentWaypointIndex] - transform.position).y),
-                STEERING_LERP
+                STEERING_LERP * Time.fixedDeltaTime
             );
         }
 

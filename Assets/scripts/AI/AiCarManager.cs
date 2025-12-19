@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.EditorTools;
 using UnityEngine;
 
 // Add AiSpawnPosition prefabs as children 
@@ -9,16 +10,17 @@ using UnityEngine;
 
 public class AiCarManager : MonoBehaviour
 {
-    [Header("AI Car Settings")]
-    [SerializeField] private bool enableAiCars = true;
-    [Tooltip("Number of AI cars to spawn. Optional.")]
-    [Range(1, 100)]
-    [SerializeField] private byte spawnedAiCarCount = 0;
+    [Header("Path Settings")]
+    [Tooltip("Parent transform containing waypoints for the AI path.")]
     [SerializeField] private Transform path;
+
+    [Header("AI Car Settings")]
+    [Tooltip("Number of AI cars to spawn. 0 = no AI cars.")]
+    [Range(0, 100)]
+    [SerializeField] private byte spawnedAiCarCount = 0;
     [Tooltip("Density for bezier points (higher = smoother curve).")]
     [Range(1, 500)]
     [SerializeField] private int bezierResolution = 10;
-    [SerializeField] private bool spawnOnStart = false;
     [SerializeField] private GameObject[] AiCarPrefabs;
     private float bezierHeight;
     public List<Vector3> BezierPoints { get; private set; } = new();
@@ -34,7 +36,7 @@ public class AiCarManager : MonoBehaviour
         if (gm == null || gm.currentCar == null) return;
 
         // Spawn AI Cars at spawn points
-        if (spawnOnStart)
+        if (spawnedAiCarCount > 0)
         {
             // Find Spawn points in children
             Transform[] spawnPoints = GetComponentsInChildren<Transform>().Where(t => t != transform).ToArray();
